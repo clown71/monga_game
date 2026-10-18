@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>monga_game</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <button class="menu-toggle" type="button" aria-label="開啟側邊選單" aria-controls="side-menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <a class="site-name" href="#top" aria-label="Monga 首頁">MONGA_GAME</a>
+        <span class="header-spacer" aria-hidden="true"></span>
+    </header>
+
+    <main id="top">
+        <section class="hero" aria-label="首頁主視覺">
+            <div class="carousel" aria-label="首頁圖片輪播" aria-roledescription="輪播">
+                <div class="carousel-viewport" tabindex="0">
+                    <div class="carousel-track"></div>
+                    <p class="carousel-empty" aria-live="polite">目前沒有輪播圖片</p>
+                    <button class="carousel-arrow carousel-previous" type="button" aria-label="上一張圖片" disabled>
+                        <span aria-hidden="true">&#8249;</span>
+                    </button>
+                    <button class="carousel-arrow carousel-next" type="button" aria-label="下一張圖片" disabled>
+                        <span aria-hidden="true">&#8250;</span>
+                    </button>
+                    <div class="carousel-indicators" aria-label="選擇輪播圖片"></div>
+                    <button class="carousel-autoplay" type="button" aria-label="暫停自動播放" aria-pressed="false" disabled>
+                        <span aria-hidden="true">Ⅱ</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        <section class="intro" aria-label="第一區塊"></section>
+    </main>
+
+    <div class="menu-backdrop" aria-hidden="true"></div>
+    <aside class="side-menu" id="side-menu" aria-label="側邊選單" aria-hidden="true" inert>
+        <div class="side-menu-header">
+            <span class="side-menu-title">選單</span>
+            <button class="menu-close" type="button" aria-label="關閉側邊選單">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <p class="empty-message">暫無內容</p>
+    </aside>
+</body>
+</html>
