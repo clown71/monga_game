@@ -11,8 +11,7 @@ const previousSlideButton = document.querySelector(".carousel-previous");
 const nextSlideButton = document.querySelector(".carousel-next");
 const autoplayButton = document.querySelector(".carousel-autoplay");
 
-const slideFiles = [];
-const slides = slideFiles.map((fileName) => ({ src: `images/${fileName}`, alt: "" }));
+let slides = [];
 let activeSlideIndex = 0;
 let autoplayTimer;
 let controlsTimer;
@@ -21,9 +20,31 @@ let pointerStart;
 let suppressClick = false;
 
 function getSlideTarget(source) {
-	const fileName = source.split("/").pop();
+	const fileName = decodeURIComponent(new URL(source, document.baseURI).pathname.split("/").pop());
 	const pageName = fileName.replace(/\.[^.]+$/, "");
 	return `${encodeURIComponent(pageName)}.html`;
+}
+
+async function loadSlideFiles() {
+	const directoryUrl = new URL("images/", document.baseURI);
+
+	try {
+		const response = await fetch(directoryUrl);
+		if (!response.ok) throw new Error("Unable to read image directory");
+
+		const listing = new DOMParser().parseFromString(await response.text(), "text/html");
+		return [...new Set([...listing.querySelectorAll("a[href]")].flatMap((link) => {
+			const imageUrl = new URL(link.getAttribute("href"), response.url);
+			const relativePath = imageUrl.pathname.slice(directoryUrl.pathname.length);
+			if (imageUrl.origin !== directoryUrl.origin || relativePath.includes("/")) return [];
+
+			const fileName = decodeURIComponent(relativePath);
+			return /\.(avif|gif|jpe?g|png|webp)$/i.test(fileName) ? [fileName] : [];
+		}))].sort((first, second) => first.localeCompare(second, "zh-Hant"));
+	} catch {
+		carouselEmpty.textContent = "無法讀取 images 資料夾，請確認伺服器提供目錄索引。";
+		return [];
+	}
 }
 
 function showSlide(index) {
@@ -59,7 +80,10 @@ function startAutoplay() {
 	}
 }
 
-function initializeCarousel() {
+async function initializeCarousel() {
+	const slideFiles = await loadSlideFiles();
+	slides = slideFiles.map((fileName) => ({ src: `images/${encodeURIComponent(fileName)}`, alt: "" }));
+
 	if (slides.length === 0) {
 		autoplayButton.disabled = true;
 		previousSlideButton.disabled = true;
